@@ -8,8 +8,8 @@ ThisBuild / organizationName := "example"
 lazy val root = (project in file("."))
   .settings(
     name := "scala-sql-compiler",
-    libraryDependencies += munit % Test,
-    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0"
+    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.3.0-SNAP4" % Test
   )
 
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.

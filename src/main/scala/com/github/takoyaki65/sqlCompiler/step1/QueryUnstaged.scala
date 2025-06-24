@@ -28,7 +28,7 @@ object QueryUnstaged {
     )(yld: Record => Unit): Unit = {
       val s = new Scanner(filename)
       val last = schema.last
-      val nextRecord = Record(
+      def nextRecord = Record(
         schema.map { x => s.next(if (x == last) '\n' else fieldDelimiter) },
         schema
       )
@@ -38,9 +38,7 @@ object QueryUnstaged {
         // schema.foreach(f => if (s.next != f) println("ERROR: schema mismatch"))
         nextRecord // ignore csv header
       }
-      while (s.hasNext) {
-        yld(nextRecord)
-      }
+      while (s.hasNext) yld(nextRecord)
       s.close
     }
 
@@ -50,7 +48,7 @@ object QueryUnstaged {
 
     def printFields(fields: Fields) = printf(
       fields
-        .map { _ => "%s" }
+        .map { s => s"$s" }
         .mkString("", defaultFieldDelimiter.toString, "\n"),
       fields: _*
     )
@@ -110,7 +108,7 @@ object QueryUnstaged {
         val keys = resultSchema(left) intersect resultSchema(right)
         val hm = new HashMap[Fields, ArrayBuffer[Record]]
         execOp(left) { rec1 =>
-          val buf = hm.getOrElse(rec1(keys), new ArrayBuffer[Record])
+          val buf = hm.getOrElseUpdate(rec1(keys), new ArrayBuffer[Record])
           buf += rec1
         }
         execOp(right) { rec2 =>
