@@ -34,7 +34,7 @@ class QueryTest extends TutorialFunSuite {
     }
   }
 
-  def testQuery(name: String, query: String = "") {
+  def testQuery(name: String, query: String = ""): Unit = {
     val drivers: List[TestDriver] = List(
       new ScalaPlainQueryDriver(name, query)
         with com.github.takoyaki65.sqlCompiler.step1.QueryUnstaged.QueryInterpreter

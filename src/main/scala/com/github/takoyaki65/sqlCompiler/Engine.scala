@@ -2,6 +2,7 @@ package com.github.takoyaki65.sqlCompiler
 
 import java.io.PrintStream
 import java.io.ByteArrayOutputStream
+import scala.compiletime.uninitialized
 
 trait Engine extends QueryProcessor with SQLParser {
   def query: String
@@ -22,8 +23,8 @@ trait Engine extends QueryProcessor with SQLParser {
 }
 
 object Run {
-  var qu: String = _
-  var fn: String = _
+  var qu: String = uninitialized
+  var fn: String = uninitialized
 
   trait MainEngine extends Engine {
     override def query = qu

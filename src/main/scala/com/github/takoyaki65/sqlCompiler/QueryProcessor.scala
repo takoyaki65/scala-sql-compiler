@@ -24,7 +24,7 @@ trait QueryProcessor extends QueryAST {
 
   def loadSchema(filename: String): Schema = {
     val s = new Scanner(filename)
-    val schema = Schema(s.next('\n').split(defaultFieldDelimiter): _*)
+    val schema = Schema(s.next('\n').split(defaultFieldDelimiter)*)
     s.close
     schema
   }

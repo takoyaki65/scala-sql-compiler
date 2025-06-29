@@ -5,7 +5,7 @@ import java.io.FileReader
 
 class Scanner(filename: String) {
   val br = new BufferedReader(new FileReader(filename))
-  private[this] var pending: String = br.readLine()
+  var pending: String = br.readLine()
   def next(delim: Char): String = {
     if (delim == '\n') {
       val field = pending

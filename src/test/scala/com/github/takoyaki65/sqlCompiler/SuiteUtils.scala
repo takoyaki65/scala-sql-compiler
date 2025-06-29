@@ -35,7 +35,7 @@ trait TutorialFunSuite extends LibSuite {
     out.write(content)
     out.close()
   }
-  def writeFileIndented(name: String, content: String) {
+  def writeFileIndented(name: String, content: String): Unit = {
     val out = new PrintWriter(new File(name))
     printIndented(content)(out)
     out.close()

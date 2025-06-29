@@ -17,7 +17,7 @@ object QueryUnstaged {
 
     case class Record(fields: Fields, schema: Schema) {
       def apply(key: String): String = fields(schema indexOf key)
-      def apply(keys: Schema): Fields = keys.map(this apply _)
+      def apply(keys: Schema): Fields = keys.map(this.apply(_))
     }
 
     def processCSV(
@@ -50,7 +50,7 @@ object QueryUnstaged {
       fields
         .map { s => s"$s" }
         .mkString("", defaultFieldDelimiter.toString, "\n"),
-      fields: _*
+      fields*
     )
 
     /** Query Interpretation

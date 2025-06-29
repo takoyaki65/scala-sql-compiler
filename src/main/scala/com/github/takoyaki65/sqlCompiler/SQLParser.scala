@@ -22,12 +22,14 @@ trait SQLParser extends QueryAST {
       })
     def fromClause: Parser[Operator] = "from" ~> joinClause
     def whereClause: Parser[Operator => Operator] =
-      opt("where" ~> predicate ^^ { p => Filter(p, _: Operator) }) ^^ {
+      opt("where" ~> predicate ^^ { p => (op: Operator) =>
+        Filter(p, op): Operator
+      }) ^^ {
         _.getOrElse(op => op)
       }
     def groupClause: Parser[Operator => Operator] =
       opt("group" ~> "by" ~> fieldIdList ~ ("sum" ~> fieldIdList) ^^ {
-        case p1 ~ p2 => Group(p1, p2, _: Operator)
+        case p1 ~ p2 => (op: Operator) => Group(p1, p2, op): Operator
       }) ^^ { _.getOrElse(op => op) }
 
     def joinClause: Parser[Operator] =
@@ -50,15 +52,15 @@ trait SQLParser extends QueryAST {
     def fieldList: Parser[(Schema, Schema)] =
       repsep(fieldIdent ~ opt("as" ~> fieldIdent), ",") ^^ { fs2s =>
         val (fs, fs1) = fs2s.map { case a ~ b => (b.getOrElse(a), a) }.unzip
-        (Schema(fs: _*), Schema(fs1: _*))
+        (Schema(fs*), Schema(fs1*))
       }
     def fieldIdList: Parser[Schema] =
-      repsep(fieldIdent, ",") ^^ { fs => Schema(fs: _*) }
+      repsep(fieldIdent, ",") ^^ { fs => Schema(fs*) }
 
     def predicate: Parser[Predicate] =
       ref ~ "=" ~ ref ^^ { case a ~ _ ~ b => Eq(a, b) }
     def ref: Parser[Ref] =
-      fieldIdent ^^ Field |
+      fieldIdent ^^ { s => Field(s) } |
         """'[^']*'""".r ^^ { s => Value(s.drop(1).dropRight(1)) } |
         """[0-9]+""".r ^^ { s => Value(s.toInt) }
 
